@@ -6,25 +6,12 @@ name 'Gitosis-Config';
 all_from 'lib/Gitosis/Config.pm';
 
 # Specific dependencies
-# requires 'Moose' => '0.25';
+requires 'Moose'       => '0.56';
+requires 'Config::INI' => undef;
 
 build_requires 'Test::More' => '0.42';
 
 no_index 'directory' => 'ex';
-
-sub kwalitee() {
-    return <<'END';
-use Test::More;
-eval "use Test::Kwalitee";
-plan skip_all => "Test::Kwalitee not installed; skipping" if $@;
-END
-}
-
-if ( $ENV{DEVELOPER_TESTS} ) {
-    use_test_base;
-    use_standard_tests;
-    write_test( '000_kwalitee' => kwalitee );
-}
 
 auto_install;
 WriteAll;
