@@ -7,16 +7,16 @@ my $file = "$FindBin::Bin/../ex/example.conf";
 
 ok( my $gc = Gitosis::Config->new_from_file($file) );
 is( $gc->gitweb, 'no' );
-ok( my @groups = $gc->groups );
+ok( my @groups = $gc->groups, 'has groups' );
 
 for my $group (@groups) {
-    ok( $group->{name} );
-    ok( $group->{members} );
+    ok( $group->{name},    'group has name' );
+    ok( $group->{members}, 'group has members' );
 }
 
-ok( my @repos = $gc->repos );
+ok( my @repos = $gc->repos, 'has repos' );
 for my $repo (@repos) {
-    ok( $repo->{name} );
-    ok( $repo->{owner} );
+    ok( $repo->{name},  'repo has name' );
+    ok( $repo->{owner}, 'repo has owner' );
 }
 

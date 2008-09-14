@@ -2,54 +2,55 @@ package Gitosis::Config;
 use Moose;
 use Gitosis::Config::Reader;
 use Gitosis::Config::Writer;
+use MooseX::AttributeHelpers;
 
-has config => (
-    isa        => 'HashRef',
-    is         => 'ro',
-    lazy_build => 1
-);
+sub BUILD {
+    my ( $self, $args ) = @_;
+    if ( my $cfg = $args->{config} ) {
+        for my $attr (qw(gitweb daemon loglevel repositories)) {
+            $self->$attr( $cfg->{gitosis}{$attr} );
+        }
+        for my $name ( grep { $_ =~ /^group/ } keys %$cfg ) {
+            my $group = $cfg->{$name};
+            $group->{name} = $name;
+            $self->add_group($group);
+        }
 
-sub _build_config {
-    { gitosis => {}, };
+        for my $name ( grep { $_ =~ /^repo/ } keys %$cfg ) {
+            my $repo = $cfg->{$name};
+            $repo->{name} = $name;
+            $self->add_repo($repo);
+        }
+
+    }
 }
 
-has gitweb => (
-    isa        => 'Maybe[Str]',
-    is         => 'ro',
-    lazy_build => 1,
+has [qw(gitweb daemon loglevel repositories)] => (
+    isa => 'Maybe[Str]',
+    is  => 'rw',
 );
-
-sub _build_gitweb {
-    $_[0]->config->{gitosis}->{gitweb};
-}
 
 has groups => (
+    metaclass  => 'Collection::Array',
     isa        => 'ArrayRef[HashRef]',
     is         => 'ro',
     auto_deref => 1,
     lazy_build => 1,
+    provides   => { push => 'add_group', }
 );
 
-sub _build_groups {
-    [
-        map { { name => $_, %{ $_[0]->config->{$_} } } }
-          grep { $_ =~ /^group/ } keys %{ $_[0]->config }
-    ];
-}
+sub _build_groups { [] }
 
 has repos => (
+    metaclass  => 'Collection::Array',
     isa        => 'ArrayRef[HashRef]',
     is         => 'ro',
     auto_deref => 1,
     lazy_build => 1,
+    provides   => { push => 'add_repo', }
 );
 
-sub _build_repos {
-    [
-        map { { name => $_, %{ $_[0]->config->{$_} } } }
-          grep { $_ =~ /^repo/ } keys %{ $_[0]->config }
-    ];
-}
+sub _build_repos { [] }
 
 #
 # METHODS
@@ -61,18 +62,8 @@ sub new_from_file {
       ->new( config => Gitosis::Config::Reader->read_file( $_[1] ) );
 }
 
-sub add_group {
-    my ( $self, $name, $data ) = @_;
-    $self->config->{"group $name"} ||= ( $data || {} );
-}
-
-sub add_repo {
-    my ( $self, $name, $data ) = @_;
-    $self->config->{"repo $name"} ||= ( $data || {} );
-}
-
 sub to_string {
-    Gitosis::Config::Writer->write_string( $_[0]->config );
+    Gitosis::Config::Writer->write_string( $_[0] );
 }
 
 no Moose;
