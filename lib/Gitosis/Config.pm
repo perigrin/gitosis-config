@@ -12,13 +12,13 @@ sub BUILD {
         }
         for my $name ( grep { $_ =~ /^group/ } keys %$cfg ) {
             my $group = $cfg->{$name};
-            $group->{name} = $name;
+            ( $group->{name} = $name ) =~ s/^group\s+//;
             $self->add_group($group);
         }
 
         for my $name ( grep { $_ =~ /^repo/ } keys %$cfg ) {
             my $repo = $cfg->{$name};
-            $repo->{name} = $name;
+            ( $repo->{name} = $name ) =~ s/^repo\s+//;
             $self->add_repo($repo);
         }
 
