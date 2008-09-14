@@ -13,7 +13,7 @@ has _gitosis => (
 );
 
 sub _build__gitosis {
-    Gitosis::Config->new_from_file( $_[0]->config_base );
+    Gitosis::Config->new( file => $_[0]->config_base );
 }
 
 has config_base => (

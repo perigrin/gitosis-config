@@ -6,7 +6,15 @@ use MooseX::AttributeHelpers;
 
 sub BUILD {
     my ( $self, $args ) = @_;
-    $self->_build_from_config( $args->{config} ) if defined $args->{config};
+
+    if ( exists $args->{config} ) {
+        return $self->_build_from_config( $args->{config} );
+    }
+
+    if ( exists $args->{file} ) {
+        my $cfg = Gitosis::Config::Reader->read_file( $args->{file} );
+        return $self->_build_from_config($cfg);
+    }
 }
 
 sub _build_from_config {
@@ -57,12 +65,6 @@ sub _build_repos { [] }
 #
 # METHODS
 #
-
-sub new_from_file {
-    confess "$_[1] doesn't exist" unless -e $_[1];
-    return ( blessed $_[0] || $_[0] )
-      ->new( config => Gitosis::Config::Reader->read_file( $_[1] ) );
-}
 
 sub to_string {
     Gitosis::Config::Writer->write_string( $_[0] );

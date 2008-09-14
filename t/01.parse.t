@@ -5,7 +5,7 @@ use FindBin;
 
 my $file = "$FindBin::Bin/../ex/example.conf";
 
-ok( my $gc = Gitosis::Config->new_from_file($file) );
+ok( my $gc = Gitosis::Config->new(file => $file) );
 is( $gc->gitweb, 'no' );
 ok( my @groups = $gc->groups, 'has groups' );
 
