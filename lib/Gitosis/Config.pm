@@ -13,6 +13,44 @@ sub _build_config {
     { gitosis => {}, };
 }
 
+has gitweb => (
+    isa        => 'Maybe[Str]',
+    is         => 'ro',
+    lazy_build => 1,
+);
+
+sub _build_gitweb {
+    $_[0]->config->{gitosis}->{gitweb};
+}
+
+has groups => (
+    isa        => 'ArrayRef[HashRef]',
+    is         => 'ro',
+    auto_deref => 1,
+    lazy_build => 1,
+);
+
+sub _build_groups {
+    [
+        map { { name => $_, %{ $_[0]->config->{$_} } } }
+          grep { $_ =~ /^group/ } keys %{ $_[0]->config }
+    ];
+}
+
+has repos => (
+    isa        => 'ArrayRef[HashRef]',
+    is         => 'ro',
+    auto_deref => 1,
+    lazy_build => 1,
+);
+
+sub _build_repos {
+    [
+        map { { name => $_, %{ $_[0]->config->{$_} } } }
+          grep { $_ =~ /^repo/ } keys %{ $_[0]->config }
+    ];
+}
+
 #
 # METHODS
 #

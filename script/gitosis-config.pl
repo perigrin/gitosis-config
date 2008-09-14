@@ -45,7 +45,7 @@ sub _repo_trigger {
     }
 }
 
-print __PACKAGE__->new_with_options->gitosis_config->to_string;
+print __PACKAGE__->new_with_options->gitosis->dump;
 
 no Moose;
 1;
