@@ -6,22 +6,24 @@ use MooseX::AttributeHelpers;
 
 sub BUILD {
     my ( $self, $args ) = @_;
-    if ( my $cfg = $args->{config} ) {
-        for my $attr (qw(gitweb daemon loglevel repositories)) {
-            $self->$attr( $cfg->{gitosis}{$attr} );
-        }
-        for my $name ( grep { $_ =~ /^group/ } keys %$cfg ) {
-            my $group = $cfg->{$name};
-            ( $group->{name} = $name ) =~ s/^group\s+//;
-            $self->add_group($group);
-        }
+    $self->_build_from_config( $args->{config} ) if defined $args->{config};
+}
 
-        for my $name ( grep { $_ =~ /^repo/ } keys %$cfg ) {
-            my $repo = $cfg->{$name};
-            ( $repo->{name} = $name ) =~ s/^repo\s+//;
-            $self->add_repo($repo);
-        }
+sub _build_from_config {
+    my ( $self, $cfg ) = @_;
+    for my $attr (qw(gitweb daemon loglevel repositories)) {
+        $self->$attr( $cfg->{gitosis}{$attr} );
+    }
+    for my $name ( grep { $_ =~ /^group/ } keys %$cfg ) {
+        my $group = $cfg->{$name};
+        ( $group->{name} = $name ) =~ s/^group\s+//;
+        $self->add_group($group);
+    }
 
+    for my $name ( grep { $_ =~ /^repo/ } keys %$cfg ) {
+        my $repo = $cfg->{$name};
+        ( $repo->{name} = $name ) =~ s/^repo\s+//;
+        $self->add_repo($repo);
     }
 }
 
