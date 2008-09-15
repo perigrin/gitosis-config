@@ -2,6 +2,7 @@ package Gitosis::Config;
 use Moose;
 use Gitosis::Config::Reader;
 use Gitosis::Config::Writer;
+use Gitosis::Config::Group;
 use MooseX::AttributeHelpers;
 
 sub BUILD {
@@ -42,7 +43,7 @@ has [qw(gitweb daemon loglevel repositories)] => (
 
 has groups => (
     metaclass  => 'Collection::Array',
-    isa        => 'ArrayRef[HashRef]',
+    isa        => 'ArrayRef[Gitosis::Config::Group]',
     is         => 'ro',
     auto_deref => 1,
     lazy_build => 1,
@@ -50,6 +51,12 @@ has groups => (
 );
 
 sub _build_groups { [] }
+
+around 'add_group' => sub {
+    my ( $next, $self, $group ) = @_;
+    $group = Gitosis::Config::Group->new(%$group) unless ( blessed $group);
+    $self->$next($group);
+};
 
 has repos => (
     metaclass  => 'Collection::Array',
