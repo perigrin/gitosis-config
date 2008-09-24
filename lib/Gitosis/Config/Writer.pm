@@ -17,10 +17,11 @@ around preprocess_input => sub {
       [ map { $_ => $input->$_ } qw(gitweb daemon loglevel repositories) ];
 
     for my $group ( $input->groups ) {
-        push @output, 'group '.$group->name => [
+        push @output, 'group '
+          . $group->name => [
             map { $_ => join ' ', @{ $group->$_ } }
               grep { $_ ne 'name' } keys %$group
-        ];
+          ];
     }
 
     for my $repo ( $input->repos ) {
