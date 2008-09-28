@@ -17,8 +17,9 @@ no_index:
     - inc
     - t
 requires:
-  Config::INI: 0
+  Config::INI: 0.013
   Moose: 0.56
+  MooseX::AttributeHelpers: 0.13
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.0.1
+version: 0.0.2

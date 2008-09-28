@@ -1,5 +1,5 @@
 package Gitosis::Config;
-our $VERSION = '0.0.1';
+our $VERSION = '0.0.2';
 use Moose;
 use Gitosis::Config::Reader;
 use Gitosis::Config::Writer;
