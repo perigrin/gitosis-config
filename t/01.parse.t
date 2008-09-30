@@ -1,9 +1,8 @@
 use Test::More tests => 12;
 
 use Gitosis::Config;
-use FindBin;
 
-my $file = "$FindBin::Bin/../ex/example.conf";
+my $file = 'ex/example.conf';
 
 ok( my $gc = Gitosis::Config->new( file => $file ) );
 is( $gc->gitweb, 'no' );

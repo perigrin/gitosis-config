@@ -1,9 +1,10 @@
 package Gitosis::Config;
-our $VERSION = '0.0.2';
+our $VERSION = '0.0.3';
 use Moose;
 use Gitosis::Config::Reader;
 use Gitosis::Config::Writer;
 use Gitosis::Config::Group;
+use MooseX::Types::Path::Class qw(File);
 use MooseX::AttributeHelpers;
 
 sub BUILD {
@@ -14,6 +15,7 @@ sub BUILD {
     }
 
     if ( exists $args->{file} ) {
+        $self->file( $args->{file} );
         my $cfg = Gitosis::Config::Reader->read_file( $args->{file} );
         return $self->_build_from_config($cfg);
     }
@@ -36,6 +38,12 @@ sub _build_from_config {
         $self->add_repo($repo);
     }
 }
+
+has file => (
+    isa    => File,
+    coerce => 1,
+    is     => 'rw',
+);
 
 has [qw(gitweb daemon loglevel repositories)] => (
     isa => 'Maybe[Str]',
@@ -78,6 +86,13 @@ sub to_string {
     Gitosis::Config::Writer->write_string( $_[0] );
 }
 
+sub save {
+    my ($self) = @_;
+    die 'Must have a filename, please set file()' unless $self->file;
+    $self->file->openw->print( $self->to_string );
+
+}
+
 no Moose;
 1;
 __END__
@@ -108,7 +123,7 @@ config files.
 
 =over
 
-=item new, new_from_file
+=item new
 
 =item loglevel, gitweb, daemon, repositories
 
@@ -120,6 +135,10 @@ config files.
 
 =item add_repo
 
+=item to_string
+
+=item save
+
 =back 
 
 =head1 CONFIGURATION AND ENVIRONMENT
@@ -128,7 +147,7 @@ Gitosis::Config requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Moose>, L<Config::INI>
+L<Config::INI>, L<Moose>, L<MooseX::AttributeHelpers>, L<MooseX::Types::Path::Class>
 
 =head1 INCOMPATIBILITIES
 

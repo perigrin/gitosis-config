@@ -20,6 +20,7 @@ requires:
   Config::INI: 0.013
   Moose: 0.56
   MooseX::AttributeHelpers: 0.13
+  MooseX::Types::Path::Class: 0.04
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.0.2
+version: 0.0.3

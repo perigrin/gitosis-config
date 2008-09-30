@@ -14,7 +14,7 @@ coerce 'Gitosis::Config::Group::List' => from 'Str' => via {
 
 has [qw(writable members)] => (
     isa    => 'Gitosis::Config::Group::List',
-    is     => 'ro',
+    is     => 'rw',
     coerce => 1,
 );
 
