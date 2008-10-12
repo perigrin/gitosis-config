@@ -56,7 +56,17 @@ has groups => (
     is         => 'ro',
     auto_deref => 1,
     lazy_build => 1,
-    provides   => { push => 'add_group', }
+    provides   => {
+        push => 'add_group',
+    },
+    curries => {
+        find => {
+            find_group_by_name => sub {
+                my ( $self, $body, $arg ) = @_;
+                $body->( $self, sub { $_[0]->name eq $arg } );
+            },
+        }
+    }
 );
 
 sub _build_groups { [] }

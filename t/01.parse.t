@@ -1,4 +1,4 @@
-use Test::More tests => 12;
+use Test::More tests => 14;
 
 use Gitosis::Config;
 
@@ -21,3 +21,5 @@ for my $repo (@repos) {
     ok( $repo->{owner}, 'repo has owner' );
 }
 
+ok(my $quux = $gc->find_group_by_name('quux'), 'found group by name');
+is($quux->name, 'quux', 'group name correct');
