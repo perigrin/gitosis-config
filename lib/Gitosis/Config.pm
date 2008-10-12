@@ -7,38 +7,6 @@ use Gitosis::Config::Group;
 use MooseX::Types::Path::Class qw(File);
 use MooseX::AttributeHelpers;
 
-sub BUILD {
-    my ( $self, $args ) = @_;
-
-    if ( exists $args->{config} ) {
-        return $self->_build_from_config( $args->{config} );
-    }
-
-    if ( exists $args->{file} ) {
-        $self->file( $args->{file} );
-        my $cfg = Gitosis::Config::Reader->read_file( $args->{file} );
-        return $self->_build_from_config($cfg);
-    }
-}
-
-sub _build_from_config {
-    my ( $self, $cfg ) = @_;
-    for my $attr (qw(gitweb daemon loglevel repositories)) {
-        $self->$attr( $cfg->{gitosis}{$attr} );
-    }
-    for my $name ( grep { $_ =~ /^group/ } keys %$cfg ) {
-        my $group = $cfg->{$name};
-        ( $group->{name} = $name ) =~ s/^group\s+//;
-        $self->add_group($group);
-    }
-
-    for my $name ( grep { $_ =~ /^repo/ } keys %$cfg ) {
-        my $repo = $cfg->{$name};
-        ( $repo->{name} = $name ) =~ s/^repo\s+//;
-        $self->add_repo($repo);
-    }
-}
-
 has file => (
     isa    => File,
     coerce => 1,
@@ -101,6 +69,42 @@ sub save {
     die 'Must have a filename, please set file()' unless $self->file;
     $self->file->openw->print( $self->to_string ) or die "$!";
 
+}
+
+#
+# Constructor Hack 
+#
+
+sub BUILD {
+    my ( $self, $args ) = @_;
+
+    if ( exists $args->{config} ) {
+        return $self->_build_from_config( $args->{config} );
+    }
+
+    if ( exists $args->{file} ) {
+        $self->file( $args->{file} );
+        my $cfg = Gitosis::Config::Reader->read_file( $args->{file} );
+        return $self->_build_from_config($cfg);
+    }
+}
+
+sub _build_from_config {
+    my ( $self, $cfg ) = @_;
+    for my $attr (qw(gitweb daemon loglevel repositories)) {
+        $self->$attr( $cfg->{gitosis}{$attr} );
+    }
+    for my $name ( grep { $_ =~ /^group/ } keys %$cfg ) {
+        my $group = $cfg->{$name};
+        ( $group->{name} = $name ) =~ s/^group\s+//;
+        $self->add_group($group);
+    }
+
+    for my $name ( grep { $_ =~ /^repo/ } keys %$cfg ) {
+        my $repo = $cfg->{$name};
+        ( $repo->{name} = $name ) =~ s/^repo\s+//;
+        $self->add_repo($repo);
+    }
 }
 
 no Moose;
