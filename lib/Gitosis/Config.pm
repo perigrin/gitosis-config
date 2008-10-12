@@ -41,7 +41,7 @@ sub _build_groups { [] }
 
 around 'add_group' => sub {
     my ( $next, $self, $group ) = @_;
-    $group = Gitosis::Config::Group->new(%$group) unless ( blessed $group);
+    $group = Gitosis::Config::Group->new($group) unless ( blessed $group);
     $self->$next($group);
 };
 
