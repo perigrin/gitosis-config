@@ -89,7 +89,7 @@ sub to_string {
 sub save {
     my ($self) = @_;
     die 'Must have a filename, please set file()' unless $self->file;
-    $self->file->openw->print( $self->to_string );
+    $self->file->openw->print( $self->to_string ) or die "$!";
 
 }
 
