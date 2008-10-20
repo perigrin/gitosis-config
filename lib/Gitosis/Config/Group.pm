@@ -4,7 +4,7 @@ use Moose::Util::TypeConstraints;
 
 has [qw(name)] => (
     isa => 'Str',
-    is  => 'ro',
+    is  => 'rw',
 );
 
 subtype 'Gitosis::Config::Group::List' => as 'ArrayRef';
