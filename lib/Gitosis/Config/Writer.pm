@@ -62,3 +62,48 @@ sub validate_input {
 
 no Moose;
 1;
+__END__
+
+__END__
+
+=head1 NAME
+
+Gitosis::Config::Writer - A class to output a valid gitosis.conf file
+
+=head1 SYNOPSIS
+
+	use Gitosis::Config::Writer;
+	Gitosis::Config::Writer->write_string( $cfg );
+
+=head1 DESCRIPTION
+
+The Gitosis::Config::Writer class extends Config::INI::Writer 
+
+=head1 METHODS
+
+All methods are exactly the same as Config::INI::Writer except as documented
+below.
+
+=head2 validate_input ($input)
+
+=head2 preprocess_input ($input)
+
+=head1 DEPENDENCIES
+
+Moose, Config::INI::Writer
+
+=head1 BUGS AND LIMITATIONS
+
+None known currently, please email the author if you find any.
+
+=head1 AUTHOR
+
+Chris Prather (chris@prather.org)
+
+=head1 LICENCE
+
+Copyright 2009 by Chris Prather.
+
+This software is free.  It is licensed under the same terms as Perl itself.
+
+=cut

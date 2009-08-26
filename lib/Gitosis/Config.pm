@@ -1,11 +1,12 @@
 package Gitosis::Config;
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 use Moose;
+use MooseX::Types::Path::Class qw(File);
+use MooseX::AttributeHelpers;
+
 use Gitosis::Config::Reader;
 use Gitosis::Config::Writer;
 use Gitosis::Config::Group;
-use MooseX::Types::Path::Class qw(File);
-use MooseX::AttributeHelpers;
 
 has file => (
     isa    => File,
@@ -123,7 +124,7 @@ This document describes Gitosis::Config version 0.05
 =head1 SYNOPSIS
 
     use Gitosis::Config;
-    my $conf = Gitosis::Config->new( '/path/to/gitosis.conf' );
+    my $conf = Gitosis::Config->new( file => 'gitosis.conf' );
 
 =head1 DESCRIPTION
 
@@ -133,25 +134,21 @@ config files.
 
 =head1 METHODS 
 
-=over
+=head2 new
 
-=item new
+=head2 loglevel, gitweb, daemon, repositories
 
-=item loglevel, gitweb, daemon, repositories
+=head2 groups
 
-=item groups
+=head2 add_group
 
-=item add_group
+=head2 repos
 
-=item repos
+=head2 add_repo
 
-=item add_repo
+=head2 to_string
 
-=item to_string
-
-=item save
-
-=back 
+=head2 save
 
 =head1 CONFIGURATION AND ENVIRONMENT
   
@@ -159,7 +156,8 @@ Gitosis::Config requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Config::INI>, L<Moose>, L<MooseX::AttributeHelpers>, L<MooseX::Types::Path::Class>
+L<Config::INI>, L<Moose>, L<MooseX::AttributeHelpers>,
+L<MooseX::Types::Path::Class>
 
 =head1 INCOMPATIBILITIES
 
@@ -167,20 +165,19 @@ None reported.
 
 =head1 BUGS AND LIMITATIONS
 
-No bugs have been reported.
-
 Please report any bugs or feature requests to
 C<bug-gitosis-config@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
 
 =head1 AUTHOR
 
-Chris Prather  C<< <perigrin@cpan.org> >>
+Chris Prather  C<< <chris@prather.org> >>
 
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2008, Chris Prather C<< <perigrin@cpan.org> >>. Some rights reserved.
+Copyright (c) 2008, Chris Prather C<< <chris@prather.org> >>. Some rights
+reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
