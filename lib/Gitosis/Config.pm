@@ -1,5 +1,5 @@
 package Gitosis::Config;
-our $VERSION = '0.0.4';
+our $VERSION = '0.05';
 use Moose;
 use Gitosis::Config::Reader;
 use Gitosis::Config::Writer;
@@ -26,16 +26,14 @@ has groups => (
     lazy_build => 1,
     provides   => {
         push => 'add_group',
+		find => 'find_group',
     },
-    curries => {
-        find => {
-            find_group_by_name => sub {
-                my ( $self, $body, $arg ) = @_;
-                $body->( $self, sub { $_[0]->name eq $arg } );
-            },
-        }
-    }
 );
+
+sub find_group_by_name {
+    my ( $self, $arg ) = @_;
+    $self->find_group( sub { $_[0]->name eq $arg } );
+}
 
 sub _build_groups { [] }
 
@@ -119,13 +117,13 @@ Gitosis::Config - Parse and Write gitosis config files
 
 =head1 VERSION
 
-This document describes Gitosis::Config version 0.0.1
+This document describes Gitosis::Config version 0.05
 
 
 =head1 SYNOPSIS
 
     use Gitosis::Config;
-    my $conf = Gitosis::Config->new_from_file( '/path/to/gitosis.conf' );
+    my $conf = Gitosis::Config->new( '/path/to/gitosis.conf' );
 
 =head1 DESCRIPTION
 

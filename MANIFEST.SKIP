@@ -1,10 +1,9 @@
+^\.git
 ^_build
 ^Build$
-^Build.PL$
 ^blib
 ~$
 \.bak$
-^MANIFEST\.SKIP$
 CVS
 \.svn
 \.DS_Store
@@ -18,8 +17,9 @@ cover_db
 ^#.*#$
 ^\.#
 ^TODO$
-^PLAN$
-^benchmarks$
-^parsing$
+^PLANS$
+^doc/
+^benchmarks
 ^\._.*$
-.git
+^t\/600_todo_tests\/$
+\.shipit
