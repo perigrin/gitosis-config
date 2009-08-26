@@ -1,4 +1,6 @@
-use Test::More tests => 14;
+#!/usr/bin/env perl 
+use strict; 
+use Test::More;
 
 use Gitosis::Config;
 
@@ -9,9 +11,9 @@ is( $gc->gitweb, 'no' );
 ok( my @groups = $gc->groups, 'has groups' );
 
 for my $group (@groups) {
-    isa_ok( $group, 'Gitosis::Config::Group', 'got a Gitosis::Config::Group' );
-    ok( $group->{name},    'group has name' );
-    ok( $group->{members}, 'group has members' );
+    ok( $group->{name},    qq'$group->{name} has name' );
+    ok( $group->{members}, qq'$group->{name} has members' );
+    isa_ok( $group, 'Gitosis::Config::Group', "$group->{name}" );
 }
 
 ok( my @repos = $gc->repos, 'has repos' );
@@ -23,3 +25,5 @@ for my $repo (@repos) {
 
 ok(my $quux = $gc->find_group_by_name('quux'), 'found group by name');
 is($quux->name, 'quux', 'group name correct');
+
+done_testing;
